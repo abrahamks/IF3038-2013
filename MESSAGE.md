@@ -15,8 +15,10 @@ Validasi ada di level aplikasi
 5. update id_task(int) status(int) time(timestamp)
 * mengupdate status suatu task
 
-6. logout id_user(int)
+6. listtask isinya(String)
+
+7. logout id_user(int)
 * id_user logout
 
-7. exit
+8. exit
 * mengembalikan message exit sebagai response dari logout

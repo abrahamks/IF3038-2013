@@ -161,6 +161,7 @@ public class DBRecord {
             return 
             (
                 // Full texts 	id_task 	nama_task 	status 	deadline 	id_kategori 	id_user 	last_edit 
+                rs.getString("id_task") + "\n" +
                 rs.getString("nama_task") + "\n" +
                 rs.getString("deadline") + "\n" +
                 GetAssignee(id_task).toString() + "\n" +

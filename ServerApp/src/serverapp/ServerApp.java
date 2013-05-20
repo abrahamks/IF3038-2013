@@ -9,6 +9,7 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.DummySender;
 import sun.security.action.GetBooleanAction;
 /**
  *
@@ -55,8 +56,10 @@ public class ServerApp extends DBRecord{
 //            Logger.getLogger(ServerApp.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        System.out.println(o);
-        System.out.println(MD5("admin2"));
-        int i = a.FindUser(MD5("admin2"), MD5("password"));
-        System.out.println(i);
+//        System.out.println(MD5("admin2"));
+//        int i = a.FindUser(MD5("admin2"), MD5("password"));
+//        System.out.println(i);
+//        System.out.println(a.GetUserTask(i));
+        DummySender sender = new DummySender("127.0.0.1", 44445);
     }
 }
