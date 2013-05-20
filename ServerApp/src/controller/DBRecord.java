@@ -167,10 +167,18 @@ public class DBRecord {
                 GetAssignee(id_task).toString() + "\n" +
                 GetTags(id_task).toString() + "\n" +
                 rs.getString("status") + "\n" +
-                GetNamaKategori(rs.getInt("id_kategori"))
+                GetNamaKategori(rs.getInt("id_kategori")) +"\n" +
+                rs.getString("last_edit")
             );
         }
         else return null;
+    }
+    
+    public void UpdateStatus (int id_task, int newstat) throws SQLException
+    // merubah status pada satu tugas
+    {
+        PreparedStatement ps = connection.prepareStatement("UPDATE task SET STATUS ='"+newstat+"' WHERE id_task ='"+id_task+"';");
+        ps.executeUpdate();
     }
     
     public ArrayList<String> GetUserTask (int id_user) throws SQLException
