@@ -42,10 +42,21 @@ public class ServerApp extends DBRecord{
     
     public static void main(String[] args) throws SQLException {
         DBRecord a = new DBRecord();
-        int i = a.FindUser("admin2", "password");
-        current_id = i;
-        System.out.println(current_id);
-        System.out.println((a.GetUserTask(i)).toString());
-        
+//        int i = a.FindUser("admin2", "password");
+//        current_id = i;
+//        System.out.println(current_id);
+//        //System.out.println((a.GetUserTask(i)).toString());
+//        String hasil = a.GetUserTask(i).toString();
+//        byte[] b  = hasil.getBytes();
+//        String o="";
+//        try {
+//            o = new String(b, "UTF8");
+//        } catch (UnsupportedEncodingException ex) {
+//            Logger.getLogger(ServerApp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        System.out.println(o);
+        System.out.println(MD5("admin2"));
+        int i = a.FindUser(MD5("admin2"), MD5("password"));
+        System.out.println(i);
     }
 }

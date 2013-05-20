@@ -53,8 +53,22 @@ public class DBRecord {
     }
     
     public int FindUser(String username, String password) throws SQLException
+    // input username dan password dalam MD5
     {
-       PreparedStatement ps = connection.prepareStatement("SELECT id_user FROM user WHERE username ='"+username+"' AND password ='" +MD5(password).toLowerCase()+ "';");
+       String MD5temp="";
+       String temp_username="";
+       PreparedStatement ps0 = connection.prepareCall("SELECT username FROM user;");
+       ResultSet rs0 = ps0.executeQuery();
+       while (rs0.next())
+       // matching username yang terenkripsi dengan MD5
+       {
+           MD5temp = MD5(rs0.getString(1));
+           if (username.equals(MD5temp))
+           {
+               temp_username = rs0.getString(1);
+           }
+       }
+       PreparedStatement ps = connection.prepareStatement("SELECT id_user FROM user WHERE username ='"+temp_username+"' AND password ='" +(password).toLowerCase()+ "';");
        ResultSet rs = ps.executeQuery();
        if (rs.next())
        {
