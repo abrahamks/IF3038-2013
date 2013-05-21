@@ -99,39 +99,37 @@ public class Client implements Runnable {
         return tugastugas;
     }
 
-    public static String MD5(String input)
-    {
-    	String result = "";
-    	try {
-    		MessageDigest MD5 = MessageDigest.getInstance("MD5");
-			DigestInputStream dis = new DigestInputStream(new ByteArrayInputStream(input.getBytes("UTF-8")), MD5);
-			
-			while (dis.read()!=-1);
-			byte[] hash = MD5.digest();
-			
-			Formatter formatter = new Formatter();
-			for (byte b : hash)
-			{
-				formatter.format("%02x", b);
-			}
-			result = formatter.toString();
-			formatter.close();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
-		}
-    	return result;
+    public static String MD5(String input) {
+        String result = "";
+        try {
+            MessageDigest MD5 = MessageDigest.getInstance("MD5");
+            DigestInputStream dis = new DigestInputStream(new ByteArrayInputStream(input.getBytes("UTF-8")), MD5);
+
+            while (dis.read() != -1);
+            byte[] hash = MD5.digest();
+
+            Formatter formatter = new Formatter();
+            for (byte b : hash) {
+                formatter.format("%02x", b);
+            }
+            result = formatter.toString();
+            formatter.close();
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "";
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "";
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "";
+        }
+        return result;
     }
-    
+
     public void send_login(String username, String pass) {
         try {
             out.writeUTF("login " + MD5(username) + " " + MD5(pass));
@@ -169,11 +167,13 @@ public class Client implements Runnable {
         }
         try {
             out.writeUTF(msg);
+            File file = new File("/Log/" + user_id + ".log");
+            file.delete();
+            logs.clear();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        File file = new File("/Log/"+user_id+".log");
-        file.delete();
+
     }
 
     public void send_logout() {
@@ -247,10 +247,10 @@ public class Client implements Runnable {
         }
 
         System.out.println("LOG : " + id_tugas + " " + new_status);
-        
+
         String content = "" + id_tugas + " " + new_status + " " + log.last_edit.toLocaleString();
-        
-        File file = new File("/Log/" + user_id+".log");
+
+        File file = new File("/Log/" + user_id + ".log");
         if (!file.exists()) {
             FileWriter fw = null;
             try {
@@ -272,17 +272,14 @@ public class Client implements Runnable {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
-        else{
+        } else {
             try {
-                PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter("/Log/"+user_id)));
+                PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter("/Log/" + user_id)));
                 fout.println(content);
                 fout.close();
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            finally{
-                
+            } finally {
             }
         }
 
