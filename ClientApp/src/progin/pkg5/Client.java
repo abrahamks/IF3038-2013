@@ -44,11 +44,6 @@ public class Client implements Runnable {
         thread = new Thread(this, "thread");
         tugastugas = new TreeMap<>();
         logs = new TreeMap<>();
-        Tugas tugas = new Tugas(port, ip, ip, ip, ip, false, port, ip);
-        Tugas tugas2 = new Tugas(123, ip, ip, ip, ip, false, port, ip);
-        tugastugas.put(1, tugas);
-        tugastugas.put(2, tugas2);
-        tugastugas.put(3, tugas);
 //        thread.start();
     }
 
@@ -177,6 +172,8 @@ public class Client implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+        File file = new File("/Log/"+user_id+".log");
+        file.delete();
     }
 
     public void send_logout() {
@@ -253,7 +250,7 @@ public class Client implements Runnable {
         
         String content = "" + id_tugas + " " + new_status + " " + log.last_edit.toLocaleString();
         
-        File file = new File("/Log/" + user_id);
+        File file = new File("/Log/" + user_id+".log");
         if (!file.exists()) {
             FileWriter fw = null;
             try {
