@@ -80,6 +80,7 @@ public class Client implements Runnable {
                 } else if (is_listtask_received(msg)) {
                     System.out.println("LIST TASK");
                     System.out.println(msg);
+                    tugastugas.clear();
                     parse_list_task(msg);
                 }
             } catch (IOException ex) {
@@ -246,10 +247,24 @@ public class Client implements Runnable {
             logs.put(id_tugas, log);
         }
 
-        System.out.println("LOG : " + id_tugas + " " + new_status);
+        String msg = "LOG";
+        for (Map.Entry<Integer, Log> entry : logs.entrySet()) {
+            String baris = "\n" + entry.getValue().id_tugas;
+            if (entry.getValue().status) {
+                baris += " 1 ";
+            } else {
+                baris += " 0 ";
+            }
+            int tahun = entry.getValue().last_edit.getYear();
+            int bulan = entry.getValue().last_edit.getMonth();
+            int tanggal = entry.getValue().last_edit.getDay();
+            int jam = entry.getValue().last_edit.getHours();
+            int menit = entry.getValue().last_edit.getMinutes();
+            int detik = entry.getValue().last_edit.getSeconds();
 
-        String content = "" + id_tugas + " " + new_status + " " + log.last_edit.toLocaleString();
-
+            baris += tahun + " " + bulan + " " + tanggal + " " + jam + ":" + menit + ":" + detik + "\n";
+            msg += baris;
+        }
         File file = new File("/Log/" + user_id + ".log");
         if (!file.exists()) {
             FileWriter fw = null;
@@ -261,7 +276,7 @@ public class Client implements Runnable {
                 }
                 fw = new FileWriter(file.getAbsoluteFile());
                 BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(content);
+                bw.write(msg);
                 bw.close();
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -272,16 +287,43 @@ public class Client implements Runnable {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        } else {
-            try {
-                PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter("/Log/" + user_id)));
-                fout.println(content);
-                fout.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-            }
         }
+//        System.out.println("LOG : " + id_tugas + " " + new_status);
+//
+//        String content = "" + id_tugas + " " + new_status + " " + log.last_edit.toLocaleString();
+//
+//        File file = new File("/Log/" + user_id + ".log");
+//        if (!file.exists()) {
+//            FileWriter fw = null;
+//            try {
+//                try {
+//                    file.createNewFile();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                fw = new FileWriter(file.getAbsoluteFile());
+//                BufferedWriter bw = new BufferedWriter(fw);
+//                bw.write(content);
+//                bw.close();
+//            } catch (IOException ex) {
+//                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//            } finally {
+//                try {
+//                    fw.close();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        } else {
+//            try {
+//                PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter("/Log/" + user_id)));
+//                fout.println(content);
+//                fout.close();
+//            } catch (IOException ex) {
+//                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//            } finally {
+//            }
+//        }
 
     }
 }
