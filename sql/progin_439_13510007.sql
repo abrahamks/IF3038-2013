@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2013 at 06:38 AM
+-- Generation Time: May 23, 2013 at 02:57 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -189,9 +189,9 @@ CREATE TABLE IF NOT EXISTS `task` (
 --
 
 INSERT INTO `task` (`id_task`, `nama_task`, `status`, `deadline`, `id_kategori`, `id_user`, `last_edit`) VALUES
-(1, 'Tugas 2', 1, '2013-03-14', 5, 2, '0000-00-00 00:00:00'),
-(5, 'Tugas 4', 0, '2013-03-14', 5, 4, '0000-00-00 00:00:00'),
-(6, 'Tugas Paling Baru Loh', 0, '2013-05-31', 10, 7, '2013-05-18 11:12:38'),
+(1, 'Tugas 2', 1, '2013-03-14', 5, 2, '2013-05-24 20:21:20'),
+(5, 'Tugas 4', 1, '2013-03-14', 5, 4, '2013-05-11 19:31:12'),
+(6, 'Tugas Paling Baru Loh', 1, '2013-05-31', 10, 7, '2013-05-18 11:12:38'),
 (7, 'Tugas Paling Baru v2', 0, '2013-05-31', 10, 7, '2013-05-18 11:12:38');
 
 -- --------------------------------------------------------

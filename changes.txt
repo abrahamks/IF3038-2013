@@ -5,3 +5,4 @@ log eksternal
 fitur logout
 menangani log kosong
 
+admin2 password

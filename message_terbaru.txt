@@ -1,0 +1,38 @@
+Client :
+1. login username(String) password(String)
+* kedua String tsb. di-enkripsi oleh MD5
+
+Server :
+2. success id_user(int)
+* mengembalikan message success setelah client berhasil login
+
+3. fail
+* mengembalikan message fail apabila client gagal terkoneksi
+
+-------------------------------------------------------------
+
+Client :
+4. request id_user(int)
+* meminta list of task yang dimiliki oleh id_user tsb.
+
+Server :
+5. listtask isinya(String)
+* isinya itu id_task, nama_task, deadline, assignee, tags, status, nama kategori, timestamp last edit
+
+-------------------------------------------------------------
+
+Client :
+6. update
+	id_tugas(int) status(int) last_edit(timestamp)
+
+Server :
+5. listtask isinya(String)
+* isinya itu id_task, nama_task, deadline, assignee, tags, status, nama kategori, timestamp last edit
+
+-------------------------------------------------------------
+
+Client :
+7. logout
+
+Server :
+8. exit
