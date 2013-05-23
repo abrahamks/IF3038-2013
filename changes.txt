@@ -1,0 +1,7 @@
+sync perubahan dari server
+server mati tiba2 --> login by id
+update timestamp
+log eksternal
+fitur logout
+menangani log kosong
+

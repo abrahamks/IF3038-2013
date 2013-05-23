@@ -311,6 +311,7 @@ public class Form extends javax.swing.JFrame {
         client = new Client(tf_ip.getText(), Integer.parseInt(tf_port.getText()));
         client.start();
         client.send_login(tf_username.getText(), tf_password.getText());
+        
         label_userid.setText("User ID: " + client.user_id);
         label_ip.setText("Server IP: "+tf_ip.getText());
         label_port.setText("Server Port: "+tf_port.getText());
@@ -331,7 +332,11 @@ public class Form extends javax.swing.JFrame {
         client.send_update();
         client.dataSiap = false;
         while(!client.dataSiap){
-            System.out.println("menunggu data siap");
+            try{
+                Thread.sleep(1000);
+            }catch(Exception e){
+            
+            }
         }
         jTable1.setModel(new GUI.TabelModel(client.getTugas()));
     }//GEN-LAST:event_jButton1ActionPerformed

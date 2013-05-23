@@ -76,7 +76,9 @@ public class Client implements Runnable {
                 if (is_success_received(msg)) {
                     String[] msgs = msg.split(" ");
                     user_id = Integer.parseInt(msgs[1]);
+                    System.out.println(msg);
                     send_request_list_task();
+                    System.out.println("ini sekarang kirim ");   
                 } else if (is_listtask_received(msg)) {
                     System.out.println("LIST TASK");
                     System.out.println(msg);
@@ -87,6 +89,7 @@ public class Client implements Runnable {
                 isConnected = false;
                 //              reconnecting.....
                 connect();
+                
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex1) {
@@ -134,6 +137,7 @@ public class Client implements Runnable {
     public void send_login(String username, String pass) {
         try {
             out.writeUTF("login " + MD5(username) + " " + MD5(pass));
+            System.out.println("login " + MD5(username) + " " + MD5(pass));
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -148,7 +152,7 @@ public class Client implements Runnable {
     }
 
     public void send_update() {
-        String msg = "update";
+        String asd = "update";
         for (Map.Entry<Integer, Log> entry : logs.entrySet()) {
             String baris = "\n" + entry.getValue().id_tugas;
             if (entry.getValue().status) {
@@ -156,19 +160,20 @@ public class Client implements Runnable {
             } else {
                 baris += " 0 ";
             }
-            int tahun = entry.getValue().last_edit.getYear();
-            int bulan = entry.getValue().last_edit.getMonth();
-            int tanggal = entry.getValue().last_edit.getDay();
+            int tahun = entry.getValue().last_edit.getYear()+1900;
+            int bulan = entry.getValue().last_edit.getMonth()+1;
+            int tanggal = entry.getValue().last_edit.getDate();
             int jam = entry.getValue().last_edit.getHours();
             int menit = entry.getValue().last_edit.getMinutes();
             int detik = entry.getValue().last_edit.getSeconds();
 
             baris += tahun + " " + bulan + " " + tanggal + " " + jam + ":" + menit + ":" + detik + "\n";
-            msg += baris;
+            asd += baris;
         }
         try {
-            out.writeUTF(msg);
-            File file = new File("/Log/" + user_id + ".log");
+            System.out.println("paket update ="+asd);
+            out.writeUTF(asd);
+            File file = new File(user_id + ".log");
             file.delete();
             logs.clear();
         } catch (IOException ex) {
@@ -198,17 +203,53 @@ public class Client implements Runnable {
     }
 
     public void parse_list_task(String msg) {
-        String str = msg.substring(8);
+        System.out.println("-------------------");
+//                listtask
+//        [6
+//        Tugas Paling Baru Loh
+//        2013-05-31
+//        [admin2]
+//        []
+//        0
+//        Tugas_Terbaru
+//        2013-05-18 18:12:38.0,
+//          7
+//        Tugas Paling Baru v2
+//        2013-05-31
+//        [abrahamks, admin2]
+//        [intelegensia buatan]
+//        0
+//        Tugas_Terbaru
+//        2013-05-18 18:12:38.0]
+        String str = msg.substring(9);
         String[] array_str = str.split("\n");
-
+        int templ=0;
+        int tempi=0;
+        templ = array_str.length;
+        if (array_str.length > 1)
+        {
+            int first=0;
+            while (tempi < templ)
+            {
+                if (tempi%8==0 && first != 0 && tempi != templ-1)
+                {
+                    array_str[tempi] = array_str[tempi].substring(1);
+                }
+                                    System.out.println(array_str[tempi]);
+               first =1;
+                tempi++;
+            }
+        }
+        System.out.println("---");
+        
         for (int i = 0; i < array_str.length / 8; i++) {
-            int idtugas = Integer.parseInt(array_str[i * 8]);
+            int idtugas = Integer.parseInt(array_str[i * 8].substring(1));
             boolean status = array_str[i * 8 + 5].equals("1");
-            int idKategori = Integer.parseInt(array_str[i * 8 + 6]);
+            int idKategori = 999;
             Tugas tugas = new Tugas(idtugas, array_str[i * 8 + 1], array_str[i * 8 + 2], array_str[i * 8 + 3], array_str[i * 8 + 4], status, idKategori, array_str[i * 8 + 7]);
             tugastugas.put(idtugas, tugas);
         }
-
+        System.out.println("lewat---");
         dataSiap = true;
     }
 
@@ -265,29 +306,29 @@ public class Client implements Runnable {
             baris += tahun + " " + bulan + " " + tanggal + " " + jam + ":" + menit + ":" + detik + "\n";
             msg += baris;
         }
-        File file = new File("/Log/" + user_id + ".log");
-        if (!file.exists()) {
-            FileWriter fw = null;
-            try {
-                try {
-                    file.createNewFile();
-                } catch (IOException ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(msg);
-                bw.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    fw.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+//        File file = new File(user_id + ".log");
+//        if (!file.exists()) {
+//            FileWriter fw = null;
+//            try {
+//                try {
+//                    file.createNewFile();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                fw = new FileWriter(file.getAbsoluteFile());
+//                BufferedWriter bw = new BufferedWriter(fw);
+//                bw.write(msg);
+//                bw.close();
+//            } catch (IOException ex) {
+//                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//            } finally {
+//                try {
+//                    fw.close();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }
 //        System.out.println("LOG : " + id_tugas + " " + new_status);
 //
 //        String content = "" + id_tugas + " " + new_status + " " + log.last_edit.toLocaleString();

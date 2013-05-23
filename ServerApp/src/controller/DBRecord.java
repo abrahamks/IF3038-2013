@@ -7,6 +7,7 @@ import java.io.*;
 import java.security.*;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 /**
  *
  * @author Abraham Krisnanda
@@ -168,7 +169,7 @@ public class DBRecord {
                 GetTags(id_task).toString() + "\n" +
                 rs.getString("status") + "\n" +
                 GetNamaKategori(rs.getInt("id_kategori")) +"\n" +
-                rs.getString("last_edit")
+                rs.getString("last_edit") +"\n"
             );
         }
         else return null;
@@ -178,6 +179,13 @@ public class DBRecord {
     // merubah status pada satu tugas
     {
         PreparedStatement ps = connection.prepareStatement("UPDATE task SET STATUS ='"+newstat+"' WHERE id_task ='"+id_task+"';");
+        ps.executeUpdate();
+    }
+    
+    public void UpdateLastEdit (int id_task, Date newtime) throws SQLException
+    // merubah status pada satu tugas
+    {
+        PreparedStatement ps = connection.prepareStatement("UPDATE task SET last_edit ='"+newtime+"' WHERE id_task ='"+id_task+"';");
         ps.executeUpdate();
     }
     

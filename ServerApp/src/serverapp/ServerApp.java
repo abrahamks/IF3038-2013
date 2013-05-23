@@ -13,6 +13,8 @@ import model.DummySender;
 import sun.security.action.GetBooleanAction;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
@@ -25,7 +27,7 @@ public class ServerApp extends DBRecord{
      */
     private static int current_id;
     private static ServerSocket connection;
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
 //        DBRecord a = new DBRecord();
 //        int i = a.FindUser("admin2", "password");
 //        current_id = i;
@@ -46,11 +48,21 @@ public class ServerApp extends DBRecord{
 //        System.out.println(a.GetUserTask(i));
  //       DummySender sender = new DummySender("127.0.0.1", 44445);
           connection = new ServerSocket(44444);
+          
+                System.out.println("Masukkan pass and User");
+                serverFrame gui = new serverFrame();
+
+                while(!gui.isLoginSucces())
+                {
+                    Thread.sleep(1000);
+                }
+
+                serverActive serverActive = new serverActive();
+            
           while (true)
           {
             /// Cek user password
-            System.out.println("Masukkan pass and User");
-            
+
             try
             {
                 System.out.println("Nunggu client");
