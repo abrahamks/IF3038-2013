@@ -398,8 +398,8 @@ public class Client implements Runnable {
                     stat = false;
                 }
                 
-                int y = Integer.parseInt(arr[2]);
-                int m = Integer.parseInt(arr[3]);
+                int y = Integer.parseInt(arr[2]) + 1900;
+                int m = Integer.parseInt(arr[3]) - 1;
                 int d = Integer.parseInt(arr[4]);
                 int h = Integer.parseInt(arr[5]);
                 int min = Integer.parseInt(arr[6]);
@@ -408,6 +408,7 @@ public class Client implements Runnable {
                 if(tugastugas.get(id).date_last_edit.before(tanggal)){
                     logs.put(id, new Log(id, stat));
                     tugastugas.get(id).isSynced = false;
+                    tugastugas.get(id).status = logs.get(id).status;
                 }
             }
         } catch (IOException ex) {
