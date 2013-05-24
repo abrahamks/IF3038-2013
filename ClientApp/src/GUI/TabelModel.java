@@ -14,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TabelModel extends AbstractTableModel{
 
-    private String[] columnNames = new String[]{"ID Tugas", "Nama Tugas", "Deadline", "Assignees", "Tag", "Status", "ID Kategori", "Last Edit"};
+    private String[] columnNames = new String[]{"ID Tugas", "Nama Tugas", "Deadline", "Assignees", "Tag", "Status", "Last Edit", "Synced/unsynced"};
     public Object[][] data;
 
     public TabelModel(Object[][] data){

@@ -69,10 +69,7 @@ package GUI;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JFrame;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import progin.pkg5.Client;
 
@@ -88,7 +85,7 @@ public class Form extends javax.swing.JFrame {
     Client client;
 
     public Form() {
-        
+
         initComponents();
 //        client = new Client(tf_ip.getText(), Integer.parseInt(tf_port.getText()));
         Action action = new AbstractAction() {
@@ -99,11 +96,21 @@ public class Form extends javax.swing.JFrame {
                 System.out.println("Column: " + tcl.getColumn());
                 System.out.println("Old   : " + tcl.getOldValue());
                 System.out.println("New   : " + tcl.getNewValue());
-                int id_tugas = (int)jTable1.getValueAt(tcl.getRow(), 0);
-                client.addLog(id_tugas, (boolean)tcl.getNewValue());
+                int id_tugas = (int) jTable1.getValueAt(tcl.getRow(), 0);
+                
+                client.addLog(id_tugas, (boolean) tcl.getNewValue());
+                
+                if(client.tugastugas.get(id_tugas).status == jTable1.getValueAt(tcl.getRow(), 5) ){
+                    jTable1.setValueAt("Up to date", tcl.getRow(), 7);
+                    jTable1.setValueAt(client.tugastugas.get(id_tugas).last_edit, tcl.getRow(), 6);
+                }
+                else{
+                    jTable1.setValueAt("Unsynced", tcl.getRow(), 7);
+                    jTable1.setValueAt(client.logs.get(id_tugas).last_edit, tcl.getRow(), 6);
+                }
             }
         };
-        
+
         TableCellListener tcl = new TableCellListener(jTable1, action);
 //        this.setLocationRelativeTo(this);
         jDialog1.setSize(400, 300);
@@ -111,6 +118,26 @@ public class Form extends javax.swing.JFrame {
         jDialog1.setLocationRelativeTo(this);
         jDialog1.setVisible(true);
 //        Client client = new Client("127.0.0.1", 44444);
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                updateForm(client.ip, client.port, client.user_id, client.isConnected);
+                return null;
+            }
+        };
+        worker.execute();
+    }
+
+    public void updateForm(String ip, int port, int userid, boolean status) {
+        label_ip.setText("Server IP: " + ip);
+        label_port.setText("Server Port: " + port);
+        label_userid.setText("User ID: " + userid);
+        if (status) {
+            label_status.setText("Status: Connected");
+        } else {
+            label_status.setText("Status: Disconnected");
+        }
     }
 
     /**
@@ -141,6 +168,7 @@ public class Form extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        button_logout = new javax.swing.JButton();
 
         jDialog1.setTitle("Login dulu...");
         jDialog1.setAlwaysOnTop(true);
@@ -159,6 +187,8 @@ public class Form extends javax.swing.JFrame {
 
         jLabel3.setText("Password:");
 
+        tf_username.setText("admin2");
+
         btn_login.setText("Login");
         btn_login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,6 +196,7 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
+        tf_password.setText("password");
         tf_password.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tf_passwordActionPerformed(evt);
@@ -174,7 +205,11 @@ public class Form extends javax.swing.JFrame {
 
         jLabel5.setText("Server IP:");
 
+        tf_ip.setText("127.0.0.1");
+
         jLabel6.setText("Server Port:");
+
+        tf_port.setText("44444");
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -229,7 +264,7 @@ public class Form extends javax.swing.JFrame {
                     .addComponent(tf_password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_login)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(217, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -263,6 +298,13 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
+        button_logout.setText("Logout");
+        button_logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button_logoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -281,7 +323,8 @@ public class Form extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(label_status))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(button_logout)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)))
                 .addContainerGap())
         );
@@ -299,7 +342,9 @@ public class Form extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(button_logout))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -311,15 +356,21 @@ public class Form extends javax.swing.JFrame {
         client = new Client(tf_ip.getText(), Integer.parseInt(tf_port.getText()));
         client.start();
         client.send_login(tf_username.getText(), tf_password.getText());
-        
-        label_userid.setText("User ID: " + client.user_id);
-        label_ip.setText("Server IP: "+tf_ip.getText());
-        label_port.setText("Server Port: "+tf_port.getText());
-        label_status.setText("Status: connected");
-        while(!client.dataSiap)
-        {
-            System.out.println("menunggu data siap");
+
+
+        while (!client.dataSiap) {
+            try {
+                System.out.println("menunggu data siap");
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        client.parseFromLogFile();
+        label_userid.setText("User ID: " + client.user_id);
+        label_ip.setText("Server IP: " + tf_ip.getText());
+        label_port.setText("Server Port: " + tf_port.getText());
+        label_status.setText("Status: connected");
         jTable1.setModel(new GUI.TabelModel(client.getTugas()));
         jDialog1.dispose();
     }//GEN-LAST:event_btn_loginActionPerformed
@@ -329,13 +380,16 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_jDialog1WindowClosed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        client.send_update();
-        client.dataSiap = false;
-        while(!client.dataSiap){
-            try{
-                Thread.sleep(1000);
-            }catch(Exception e){
-            
+        if (client.logs.isEmpty()) {
+            client.send_request_list_task();
+        } else {
+            client.send_update();
+            client.dataSiap = false;
+            while (!client.dataSiap) {
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                }
             }
         }
         jTable1.setModel(new GUI.TabelModel(client.getTugas()));
@@ -344,6 +398,14 @@ public class Form extends javax.swing.JFrame {
     private void tf_passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_passwordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_passwordActionPerformed
+
+    private void button_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_logoutActionPerformed
+        client.send_logout();
+        jDialog1.setSize(400, 300);
+        jDialog1.setAlwaysOnTop(true);
+        jDialog1.setLocationRelativeTo(this);
+        jDialog1.setVisible(true);
+    }//GEN-LAST:event_button_logoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -382,12 +444,14 @@ public class Form extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new Form().setVisible(true);
+                Form form = new Form();
+                form.setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_login;
+    private javax.swing.JButton button_logout;
     private javax.swing.JButton jButton1;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
